@@ -2,15 +2,12 @@ package com.zhy.zooweb.dao.zookeeper;
 
 import com.zhy.zooweb.dao.h2.ZkCfgManager;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ZkCache {
 
-	@Resource
-	private ZkCfgManager cfgManager;
 
 	private static Map<String, ZkManager> _cache = new ConcurrentHashMap<String, ZkManager>();
 
@@ -39,7 +36,8 @@ public class ZkCache {
 		List<Map<String, Object>> list = cfgManager.query();
 		
 		for(Map<String , Object> m : list){
-			ZkCache.put(m.get("ID").toString(), ZkManagerImpl.createZk().connect(m.get("CONNECTSTR").toString(), Integer.parseInt(m.get("SESSIONTIMEOUT").toString())));
+			ZkCache.put(m.get("ID").toString(), ZkManagerImpl.createZk().connect(m.get("CONNECTSTR").toString(),
+					Integer.parseInt(m.get("SESSIONTIMEOUT").toString())));
 		}
 	}
 	

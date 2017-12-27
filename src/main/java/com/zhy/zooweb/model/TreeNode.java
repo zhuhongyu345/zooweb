@@ -2,7 +2,6 @@ package com.zhy.zooweb.model;
 
 
 public class TreeNode {
-
 	private int id;
 	private String name;
 	private int pid = -1;

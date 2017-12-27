@@ -2,20 +2,17 @@ package com.zhy.zooweb.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TreeRoot extends ArrayList<Tree>{
-	
-	Map<String, Object> atr = new HashMap<String, Object>();
-	private Tree root = new Tree(0,"/",Tree.STATE_CLOSED,null,atr);
+
+	private static final long serialVersionUID = -5814745768637302855L;
+
 	public TreeRoot() {
+		Map<String, Object> atr = new HashMap<String, Object>();
 		atr.put("path", "/");
+		Tree root = new Tree(0, "/", Tree.STATE_CLOSED, null, atr);
 		this.add(root);
 	}
-	
-	public void setChildern(List<Tree> childern){
-		
-		this.root.setChildern(childern);
-	}
+
 }
