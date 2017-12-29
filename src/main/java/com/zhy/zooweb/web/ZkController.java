@@ -6,8 +6,6 @@ import com.zhy.zooweb.model.TreeRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +24,8 @@ public class ZkController {
 
     @RequestMapping(value = "/queryZnodeInfo")
     @ResponseBody
-    public Map<String, Object> queryzNodeInfo(@RequestParam(required = false) String path, @RequestParam() String cacheId) {
+    public Map<String, Object> queryzNodeInfo(@RequestParam(required = false) String path,
+                                              @RequestParam() String cacheId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             path = URLDecoder.decode(path, "utf-8");
@@ -41,15 +40,13 @@ public class ZkController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(model);
         return model;
     }
 
 
     @RequestMapping(value = "/queryZnode")
     @ResponseBody
-    public List<Tree> query(@RequestParam(required = false) String id,
-                            @RequestParam(required = false) String path,
+    public List<Tree> query(@RequestParam(required = false) String id, @RequestParam(required = false) String path,
                             @RequestParam() String cacheId) {
         log.info("id : {}", id);
         log.info("path : {}", path);
@@ -86,12 +83,7 @@ public class ZkController {
 
     @RequestMapping(value = "/saveData", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String saveData(
-            @RequestParam() String path,
-            @RequestParam() String data,
-            @RequestParam() String cacheId
-    ) {
-
+    public String saveData(@RequestParam() String path, @RequestParam() String data, @RequestParam() String cacheId) {
         try {
             log.info("data:{}", data);
             return ZkCache.get(cacheId).setData(path, data) ? "保存成功" : "保存失败";
@@ -105,12 +97,8 @@ public class ZkController {
 
     @RequestMapping(value = "/createNode", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String createNode(
-            @RequestParam() String path,
-            @RequestParam() String nodeName,
-            @RequestParam() String cacheId
-    ) {
-
+    public String createNode(@RequestParam() String path, @RequestParam() String nodeName,
+                             @RequestParam() String cacheId) {
         try {
             log.info("path:{}", path);
             log.info("nodeName:{}", nodeName);
@@ -125,11 +113,7 @@ public class ZkController {
 
     @RequestMapping(value = "/deleteNode", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String deleteNode(
-            @RequestParam() String path,
-            @RequestParam() String cacheId
-    ) {
-
+    public String deleteNode(@RequestParam() String path, @RequestParam() String cacheId) {
         try {
             log.info("path:{}", path);
             return ZkCache.get(cacheId).deleteNode(path) ? "删除成功" : "删除失败";
