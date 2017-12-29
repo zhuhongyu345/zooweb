@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,23 +24,25 @@ public class ZkController {
 
     private static final Logger log = LoggerFactory.getLogger(ZkController.class);
 
-    @RequestMapping(value = "/queryZnodeInfo", produces = "text/html;charset=UTF-8")
-    public String queryzNodeInfo(@RequestParam(required = false) String path, Model model, @RequestParam() String cacheId) {
+    @RequestMapping(value = "/queryZnodeInfo")
+    @ResponseBody
+    public Map<String, Object> queryzNodeInfo(@RequestParam(required = false) String path, @RequestParam() String cacheId) {
+        Map<String, Object> model = new HashMap<String, Object>();
         try {
             path = URLDecoder.decode(path, "utf-8");
             log.info("queryzNodeInfo : " + path);
             if (path != null) {
-                model.addAttribute("data", ZkCache.get(cacheId).getData(path));
-                model.mergeAttributes(ZkCache.get(cacheId).getNodeMeta(path));
-                model.addAttribute("acls", ZkCache.get(cacheId).getACLs(path));
-                model.addAttribute("path", path);
-                model.addAttribute("cacheId", cacheId);
+                model.put("data", ZkCache.get(cacheId).getData(path));
+                model.put("arr", ZkCache.get(cacheId).getNodeMeta(path));
+                model.put("acls", ZkCache.get(cacheId).getACLs(path));
+                model.put("path", path);
+                model.put("cacheId", cacheId);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return "info";
+        System.out.println(model);
+        return model;
     }
 
 
