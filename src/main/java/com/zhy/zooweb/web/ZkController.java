@@ -19,9 +19,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/zk")
 public class ZkController {
-
     private static final Logger log = LoggerFactory.getLogger(ZkController.class);
-
     @RequestMapping(value = "/queryZnodeInfo")
     @ResponseBody
     public Map<String, Object> queryzNodeInfo(@RequestParam(required = false) String path,
@@ -48,7 +46,7 @@ public class ZkController {
     @ResponseBody
     public List<Tree> query(@RequestParam(required = false) String id, @RequestParam(required = false) String path,
                             @RequestParam() String cacheId) {
-        log.info("id : {}", id);
+        log.info("id : {} | path : {} | cacheId : {}", id,path);
         log.info("path : {}", path);
         log.info("cacheId : {}", cacheId);
         TreeRoot root = new TreeRoot();

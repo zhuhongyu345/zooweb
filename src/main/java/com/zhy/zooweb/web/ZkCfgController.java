@@ -20,16 +20,14 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/zkcfg")
 public class ZkCfgController {
-
     private static final Logger log = LoggerFactory.getLogger(ZkCfgController.class);
-
     @Resource
     private ZkCfgManager zkCfgManager;
 
     @RequestMapping(value = "/queryZkCfg")
-    public @ResponseBody
-    Map<String, Object> queryZkCfg(@RequestParam(required = false) int page, @RequestParam(required = false) int rows) {
-
+    @ResponseBody
+    public Map<String, Object> queryZkCfg(@RequestParam(required = false) int page,
+                                          @RequestParam(required = false) int rows) {
         try {
             log.info(new Date() + "");
             Map<String, Object> _map = new HashMap<String, Object>();
@@ -44,18 +42,14 @@ public class ZkCfgController {
     }
 
     @RequestMapping(value = "/addZkCfg", produces = "text/html;charset=UTF-8")
-    public @ResponseBody
-    String addZkCfg(
-            @RequestParam(required = false) String des,
-            @RequestParam(required = false) String connectstr,
-            @RequestParam(required = false) String sessiontimeout) {
-
+    @ResponseBody
+    public String addZkCfg(@RequestParam(required = false) String des,
+                           @RequestParam(required = false) String connectstr,
+                           @RequestParam(required = false) String sessiontimeout) {
         try {
             String id = UUID.randomUUID().toString().replaceAll("-", "");
-            if (zkCfgManager.add(id, des, connectstr, sessiontimeout)) {
+            if (zkCfgManager.add(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -65,10 +59,8 @@ public class ZkCfgController {
     }
 
     @RequestMapping(value = "/queryZkCfgById")
-    public @ResponseBody
-    Map<String, Object> queryZkCfg(
-            @RequestParam(required = false) String id) {
-
+    @ResponseBody
+    public Map<String, Object> queryZkCfg(@RequestParam(required = false) String id) {
         try {
             return zkCfgManager.findById(id);
         } catch (Exception e) {
@@ -79,18 +71,13 @@ public class ZkCfgController {
     }
 
     @RequestMapping(value = "/updateZkCfg", produces = "text/html;charset=UTF-8")
-    public @ResponseBody
-    String updateZkCfg(
-            @RequestParam() String id,
-            @RequestParam(required = false) String des,
-            @RequestParam(required = false) String connectstr,
-            @RequestParam(required = false) String sessiontimeout) {
-
+    @ResponseBody
+    public String updateZkCfg(@RequestParam() String id, @RequestParam(required = false) String des,
+                              @RequestParam(required = false) String connectstr,
+                              @RequestParam(required = false) String sessiontimeout) {
         try {
-            if (zkCfgManager.update(id, des, connectstr, sessiontimeout)) {
+            if (zkCfgManager.update(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -100,15 +87,10 @@ public class ZkCfgController {
     }
 
     @RequestMapping(value = "/delZkCfg", produces = "text/html;charset=UTF-8")
-    public @ResponseBody
-    String delZkCfg(
-            @RequestParam() String id) {
-
+    @ResponseBody
+    public String delZkCfg(@RequestParam() String id) {
         try {
-            if (zkCfgManager.delete(id)) {
-                ZkCache.remove(id);
-            }
-
+            if (zkCfgManager.delete(id)) ZkCache.remove(id);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());

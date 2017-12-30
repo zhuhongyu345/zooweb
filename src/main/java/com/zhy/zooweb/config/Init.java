@@ -17,9 +17,8 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
         System.out.println("*********************************init srping*********************************");
-        ZkCache.init(zkCfgManager);
 
+        ZkCache.init(zkCfgManager);
     }
 }
