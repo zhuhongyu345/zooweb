@@ -1,0 +1,159 @@
+<html>
+<link rel="stylesheet" type="text/css" href="js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="js/easyui/themes/icon.css">
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/init.js"></script>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>This is ZkWeb</title>
+    <script type="text/javascript">
+
+    </script>
+
+</head>
+
+<body class="easyui-layout" id="zkweb_body">
+<div data-options="region:'north',border:false" style="height:200px">
+    <center>
+        <table class="easyui-datagrid" title="zookeeper cfg" id="zkweb_zkcfg"
+               data-options="pagination:true,singleSelect:true,fitColumns:true,rownumbers:true,pageSize:5"
+               toolbar="#zkweb_tb">
+            <thead>
+            <tr>
+                <th data-options="field:'ID'">ID</th>
+                <th data-options="field:'DES'">DES</th>
+                <th data-options="field:'CONNECTSTR'">URL</th>
+                <th data-options="field:'SESSIONTIMEOUT'">SESSIONTIMEOUT(s)</th>
+            </tr>
+            </thead>
+        </table>
+
+        <div id="zkweb_tb">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+               onclick="javascript:$('#zkweb_add_cfg').window('open');">添加</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="openUpdateWin()">更新</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-no" plain="true" onclick="openDelWin()">删除</a>
+        </div>
+    </center>
+
+</div>
+
+<!--
+<div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region</div>
+
+<div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
+-->
+<div data-options="region:'west',split:true,title:'zookeeper tree'" style="width:150px;padding:10px;height:120px;">
+    <ul id="zkTree" class="easyui-tree">
+    </ul>
+    <!-- right -->
+    <div id="mm" class="easyui-menu" style="width:120px;">
+        <div onclick="javascript:$('#w').window('open');" data-options="iconCls:'icon-add'">添加</div>
+        <div onclick="remove()" data-options="iconCls:'icon-remove'">删除</div>
+        <div class="menu-sep"></div>
+        <div onclick="expand()">展开</div>
+        <div onclick="collapse()">收起</div>
+    </div>
+</div>
+
+<div data-options="region:'center'" border="false" style="overflow: hidden;">
+    <div class="easyui-tabs" id="zkTab" data-options="tools:'#tab-tools',toolPosition:'left'">
+        <div title="Home" style="padding:10px;">
+            Welcome!
+        </div>
+    </div>
+    <div id="tab-tools">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'"
+           onclick="javascript:$('#w').window('open');"></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'"
+           onclick="remove()"></a>
+    </div>
+
+</div>
+
+<!-- add -->
+<div id="w" class="easyui-window" title="添加节点"
+     data-options="iconCls:'icon-add',modal:true,closed:true,maximizable:false"
+     style="width:500px;padding:10px;">
+
+    <div style="text-align:center;padding:5px">
+        输入节点名称:
+        <input id="zkNodeName" class="easyui-validatebox" type="text"
+               data-options="required:true,tipPosition:'right'"></input>
+    </div>
+
+    <div style="text-align:center;padding:5px">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addzkNode()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
+           onclick="$('#w').window('close');">取消</a>
+    </div>
+
+</div>
+
+<div id="zkweb_add_cfg" class="easyui-window" title="添加配置信息"
+     data-options="iconCls:'icon-add',modal:true,closed:true,maximizable:false"
+     style="width:260px;height:175px;padding:10px;">
+
+    <form id="zkweb_add_cfg_form" style="height: 100px;" method="post" action="zkcfg/addZkCfg">
+        <table>
+            <tr>
+                <td style="font-size:12px;">DES:</td>
+                <td><input style="width:120px;margin-left: 10px;" name="des" type="text" placeholder=""></input>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size:12px;">URL:</td>
+                <td><input style="width:120px;margin-left: 10px;" name="connectstr" type="text"
+                           placeholder="127.0.0.1:2181"></input></td>
+            </tr>
+            <tr>
+                <td style="font-size:12px;">SESSION(秒):</td>
+                <td><input style="width:120px;margin-left: 10px;" name="sessiontimeout" type="text"
+                           placeholder="3600"></input></td>
+            </tr>
+        </table>
+        <div style="margin-top: 10px;">
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+               style="margin-left: 30px;" onclick="saveCfg()">保存</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
+               onclick="$('#zkweb_add_cfg').window('close');">取消</a>
+        </div>
+    </form>
+
+</div>
+
+<div id="zkweb_up_cfg" class="easyui-window" title="更新配置信息"
+     data-options="iconCls:'icon-update',modal:true,closed:true,maximizable:false"
+     style="width:260px;height:180px;padding:10px;">
+
+    <form id="zkweb_up_cfg_form" method="post" action="zkcfg/updateZkCfg">
+        <input type="hidden" name="id"/>
+        <table>
+            <tr>
+                <td style="font-size:12px;">DES:</td>
+                <td><input name="des" type="text"></input></td>
+            </tr>
+            <tr>
+                <td style="font-size:12px;">URL:</td>
+                <td><input name="connectstr" type="text"></input></td>
+            </tr>
+            <tr>
+                <td style="font-size:12px;">SESSION(s):</td>
+                <td><input name="sessiontimeout" type="text" placeholder="3600"></input></td>
+            </tr>
+        </table>
+        <div style="margin-top: 10px;margin-left: 30px;">
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+               onclick="updateCfg()">保存</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
+               onclick="$('#zkweb_up_cfg').window('close');">取消</a>
+        </div>
+    </form>
+
+</div>
+
+</body>
+
+</html>

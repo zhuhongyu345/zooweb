@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 @Controller
@@ -31,7 +29,11 @@ public class ZkCfgController {
         try {
             log.info(new Date() + "");
             Map<String, Object> _map = new HashMap<String, Object>();
-            _map.put("rows", zkCfgManager.query(page, rows));
+            List<Map<String, Object>> query = zkCfgManager.query(page, rows);
+            for(Map<String, Object> q:query){
+                q.put("SESSIONTIMEOUT",Integer.parseInt(q.get("SESSIONTIMEOUT").toString())/1000);
+            }
+            _map.put("rows", query);
             _map.put("total", zkCfgManager.count());
             return _map;
         } catch (Exception e) {
@@ -47,6 +49,14 @@ public class ZkCfgController {
                            @RequestParam(required = false) String connectstr,
                            @RequestParam(required = false) String sessiontimeout) {
         try {
+            if (des == null || des.equals("")) des = "zookeeper";
+            if (sessiontimeout == null || sessiontimeout.equals("")) {
+                sessiontimeout = "3600000";
+            } else {
+                sessiontimeout = sessiontimeout + 000;
+            }
+            Integer.parseInt(sessiontimeout);
+            if (!Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+):(\\d+)").matcher(connectstr).find()) return "添加失败";
             String id = UUID.randomUUID().toString().replaceAll("-", "");
             if (zkCfgManager.add(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
@@ -76,6 +86,14 @@ public class ZkCfgController {
                               @RequestParam(required = false) String connectstr,
                               @RequestParam(required = false) String sessiontimeout) {
         try {
+            if (des == null || des.equals("")) des = "zookeeper";
+            if (sessiontimeout == null || sessiontimeout.equals("")) {
+                sessiontimeout = "3600000";
+            } else {
+                sessiontimeout = sessiontimeout + 000;
+            }
+            Integer.parseInt(sessiontimeout);
+            if (!Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+):(\\d+)").matcher(connectstr).find()) return "保存失败";
             if (zkCfgManager.update(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
         } catch (Exception e) {

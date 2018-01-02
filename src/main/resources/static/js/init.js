@@ -29,8 +29,6 @@ function initTree(cacheId) {
         },
         onClick: function (node) {
             var tab = $('#zkTab').tabs('getSelected');
-            //var index = $('#zkTab').tabs('getTabIndex',tab);
-            //alert(index);
             if (tab != null) {
                 tab.title = node.text;
                 $('#zkTab').tabs('update', {
@@ -38,7 +36,6 @@ function initTree(cacheId) {
                     options: {
                         title: node.text,
                         href: "info.html?path=" + encodeURI(encodeURI(node.attributes.path)) + "&cacheId=" + cacheId
-//    						href: "zk/queryZnodeInfo?path="+encodeURI(encodeURI(node.attributes.path))+"&cacheId="+cacheId
                     }
                 });
             } else {
@@ -46,7 +43,6 @@ function initTree(cacheId) {
                     id: 0,
                     title: node.text,
                     href: "info.html?path=" + encodeURI(encodeURI(node.attributes.path)) + "&cacheId=" + cacheId
-//    		            href: "zk/queryZnodeInfo?path="+encodeURI(encodeURI(node.attributes.path))+"&cacheId="+cacheId
                 });
             }
             doData(encodeURI(encodeURI(node.attributes.path)), cacheId);
