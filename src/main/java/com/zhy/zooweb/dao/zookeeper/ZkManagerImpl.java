@@ -212,12 +212,9 @@ public class ZkManagerImpl implements Watcher, ZkManager {
     }
 
     public static String timeParser(long ts) {
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
         GregorianCalendar calendar = new GregorianCalendar(TimeZone.getDefault());
         calendar.setTimeInMillis(ts);
-        System.out.println("GregorianCalendar " + sdf.format(calendar.getTime()));
-
         return sdf.format(calendar.getTime());
     }
 }
