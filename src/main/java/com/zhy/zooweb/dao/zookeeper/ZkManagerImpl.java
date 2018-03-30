@@ -11,10 +11,8 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ZkManagerImpl implements Watcher, ZkManager {
 
@@ -29,7 +27,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
 
     public ZkManagerImpl connect(String host, int timeout) {
         try {
-            if (null == zk) zk = new ZooKeeper(host, timeout, this);
+            if (null == zk) { zk = new ZooKeeper(host, timeout, this); }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,27 +70,27 @@ public class ZkManagerImpl implements Watcher, ZkManager {
             Stat s = zk.exists(nodePath, false);
             if (s != null) {
                 nodeMeta.put(Meta.aversion.toString(),
-                        String.valueOf(s.getAversion()));
+                    String.valueOf(s.getAversion()));
                 nodeMeta.put(Meta.ctime.toString(),
-                        String.valueOf(s.getCtime()));
+                    String.valueOf(s.getCtime()) + " ( " + timeParser(s.getCtime()) + " )");
                 nodeMeta.put(Meta.cversion.toString(),
-                        String.valueOf(s.getCversion()));
+                    String.valueOf(s.getCversion()));
                 nodeMeta.put(Meta.czxid.toString(),
-                        String.valueOf(s.getCzxid()));
+                    String.valueOf(s.getCzxid()));
                 nodeMeta.put(Meta.dataLength.toString(),
-                        String.valueOf(s.getDataLength()));
+                    String.valueOf(s.getDataLength()));
                 nodeMeta.put(Meta.ephemeralOwner.toString(),
-                        String.valueOf(s.getEphemeralOwner()));
+                    String.valueOf(s.getEphemeralOwner()));
                 nodeMeta.put(Meta.mtime.toString(),
-                        String.valueOf(s.getMtime()));
+                    String.valueOf(s.getMtime()) + " ( " + timeParser(s.getMtime()) + " )");
                 nodeMeta.put(Meta.mzxid.toString(),
-                        String.valueOf(s.getMzxid()));
+                    String.valueOf(s.getMzxid()));
                 nodeMeta.put(Meta.numChildren.toString(),
-                        String.valueOf(s.getNumChildren()));
+                    String.valueOf(s.getNumChildren()));
                 nodeMeta.put(Meta.pzxid.toString(),
-                        String.valueOf(s.getPzxid()));
+                    String.valueOf(s.getPzxid()));
                 nodeMeta.put(Meta.version.toString(),
-                        String.valueOf(s.getVersion()));
+                    String.valueOf(s.getVersion()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,7 +168,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
             Stat s = zk.exists(p, false);
             if (s == null) {
                 zk.create(p, data.getBytes(),
-                        Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                    Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
             return true;
         } catch (Exception e) {
@@ -211,5 +209,12 @@ public class ZkManagerImpl implements Watcher, ZkManager {
     }
 
     public void process(WatchedEvent arg0) {
+    }
+
+    public static String timeParser(long ts) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+        GregorianCalendar calendar = new GregorianCalendar(TimeZone.getDefault());
+        calendar.setTimeInMillis(ts);
+        return sdf.format(calendar.getTime());
     }
 }
