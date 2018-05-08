@@ -7,7 +7,7 @@
 <script type="text/javascript" src="js/init.js"></script>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>This is ZkWeb</title>
+    <title>ZOOKEEPER管理器</title>
     <script type="text/javascript">
 
     </script>
@@ -15,28 +15,28 @@
 </head>
 
 <body class="easyui-layout" id="zkweb_body">
-<div data-options="region:'north',border:false" style="height:200px">
-    <center>
-        <table class="easyui-datagrid" title="zookeeper cfg" id="zkweb_zkcfg"
-               data-options="pagination:true,singleSelect:true,fitColumns:true,rownumbers:true,pageSize:5"
-               toolbar="#zkweb_tb">
-            <thead>
-            <tr>
-                <th data-options="field:'ID'">ID</th>
-                <th data-options="field:'DES'">DES</th>
-                <th data-options="field:'CONNECTSTR'">URL</th>
-                <th data-options="field:'SESSIONTIMEOUT'">SESSIONTIMEOUT(s)</th>
-            </tr>
-            </thead>
-        </table>
+<div data-options="region:'north',border:false" style="height:250px">
+    <table class="easyui-datagrid" title="服务器配置" id="zkweb_zkcfg"
+           data-options="pagination:true,singleSelect:true,rownumbers:true,pageList:[5,10,20,50,100],pageSize:5,fit:true"
+           toolbar="#zkweb_tb">
+        <thead>
+        <tr>
+            <th data-options="field:'ID',width:250">ID</th>
+            <th data-options="field:'DES',width:400">DES</th>
+            <th data-options="field:'CONNECTSTR',width:300">URL</th>
+            <th data-options="field:'SESSIONTIMEOUT',width:200">SESSIONTIMEOUT(s)</th>
+        </tr>
+        </thead>
+    </table>
 
-        <div id="zkweb_tb">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
-               onclick="javascript:$('#zkweb_add_cfg').window('open');">添加</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="openUpdateWin()">更新</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-no" plain="true" onclick="openDelWin()">删除</a>
-        </div>
-    </center>
+    <div id="zkweb_tb">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+           onclick="javascript:$('#zkweb_add_cfg').window('open');">添加</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="openUpdateWin()">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="openDelWin()">删除</a>
+        <a>|</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="selectCfg()">选择</a>
+    </div>
 
 </div>
 
@@ -45,7 +45,7 @@
 
 <div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
 -->
-<div data-options="region:'west',split:true,title:'zookeeper tree'" style="width:150px;padding:10px;height:120px;">
+<div data-options="region:'west',split:true,title:'节点树',tools:'#tree-tools'" style="width:450px">
     <ul id="zkTree" class="easyui-tree">
     </ul>
     <!-- right -->
@@ -56,21 +56,84 @@
         <div onclick="expand()">展开</div>
         <div onclick="collapse()">收起</div>
     </div>
+
+    <div id="tree-tools">
+        <a href="#" class="icon-add" onclick="add()" title="添加"></a>
+        <a href="#" class="icon-remove" onclick="remove()" title="删除"></a>
+        <a href="#" class="icon-reload" onclick="reload()" title="刷新"></a>
+    </div>
 </div>
 
-<div data-options="region:'center'" border="false" style="overflow: hidden;">
-    <div class="easyui-tabs" id="zkTab" data-options="tools:'#tab-tools',toolPosition:'left'">
-        <div title="Home" style="padding:10px;">
-            Welcome!
-        </div>
-    </div>
-    <div id="tab-tools">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'"
-           onclick="javascript:$('#w').window('open');"></a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'"
-           onclick="remove()"></a>
-    </div>
+<div data-options="region:'center'" border="false" style="overflow: hidden">
+    <div class="easyui-panel" title="节点详情" data-options="fit:true">
+        <form id="ff" method="post">
 
+            <input id = "r_cacheId" type="hidden"  name="cacheId" />
+            <div>
+                <table id = "r_table" border="1" rules="all">
+                    <tr>
+                        <td><label >路径</label></td>
+                        <td><input id = "r_path" name="path" readonly style="border: white"/></td>
+                    </tr>
+                    <tr>
+                        <td><label >数据</label></td>
+                        <td>
+                            <textarea id = "r_data" rows="10" cols="80" name="data"></textarea>
+                    </tr>
+                    <tr>
+                        <td><label >创建事务ID</label></td>
+                        <td id ="r_czxid"></td>
+                    </tr>
+                    <tr>
+                        <td><label >修改事务ID</label></td>
+                        <td id ="r_mzxid"></td>
+                    </tr>
+                    <tr>
+                        <td><label >创建时间</label></td>
+                        <td id ="r_ctime"></td>
+                    </tr>
+                    <tr>
+                        <td><label >修改时间</label></td>
+                        <td id ="r_mtime"></td>
+                    </tr>
+                    <tr>
+                        <td><label >修改次数</label></td>
+                        <td id ="r_version"></td>
+                    </tr>
+                    <tr>
+                        <td><label >子节点修改次数</label></td>
+                        <td id ="r_cversion"></td>
+                    </tr>
+                    <tr>
+                        <td><label >ACL修改次数</label></td>
+                        <td id ="r_aversion"></td>
+                    </tr>
+                    <tr>
+                        <td><label >临时节点OWNER</label></td>
+                        <td id ="r_ephemeralOwner"></td>
+                    </tr>
+                    <tr>
+                        <td><label >数据长度</label></td>
+                        <td id ="r_dataLength"></td>
+                    </tr>
+                    <tr>
+                        <td><label >子节点个数</label></td>
+                        <td id ="r_numChildren"></td>
+                    </tr>
+                    <tr>
+                        <td><label >子节点列表修改事务ID</label></td>
+                        <td id ="r_pzxid"></td>
+                    </tr>
+                    <tr>
+                        <td><label >访问控制列表</label></td>
+                        <td id ="r_acls"></td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveData()">保存</a>
+        </form>
+    </div>
 </div>
 
 <!-- add -->
@@ -96,7 +159,7 @@
      data-options="iconCls:'icon-add',modal:true,closed:true,maximizable:false"
      style="width:260px;height:175px;padding:10px;">
 
-    <form id="zkweb_add_cfg_form" style="height: 100px;" method="post" action="zkcfg/addZkCfg">
+    <form id="zkweb_add_cfg_form" style="height: 100px;" method="post">
         <table>
             <tr>
                 <td style="font-size:12px;">DES:</td>

@@ -37,7 +37,7 @@ public class ZkCfgManager {
     }
 
     public List<Map<String, Object>> query(int page, int rows) {
-        return jdbcTemplate.queryForList("SELECT * FROM ZK limit ?,?", (page - 1) * rows, rows);
+        return jdbcTemplate.queryForList("SELECT * FROM ZK  order by des limit ?,?", (page - 1) * rows, rows);
     }
 
     public boolean add(String id, String des, String connectStr, String sessionTimeOut) {
