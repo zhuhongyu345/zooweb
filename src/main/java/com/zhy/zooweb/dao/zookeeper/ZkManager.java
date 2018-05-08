@@ -17,7 +17,7 @@ public interface ZkManager {
 	
 	boolean createNode(String path, String nodeName, String data);
 
-	boolean deleteNode(String nodePath);
+	boolean deleteNodes(List<String> nodePath);
 
 	boolean setData(String nodePath, String data);
 

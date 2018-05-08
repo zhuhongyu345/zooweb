@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -30,9 +31,6 @@ public class ZkCfgController {
             log.info(new Date() + "");
             Map<String, Object> _map = new HashMap<String, Object>();
             List<Map<String, Object>> query = zkCfgManager.query(page, rows);
-            for(Map<String, Object> q:query){
-                q.put("SESSIONTIMEOUT",Integer.parseInt(q.get("SESSIONTIMEOUT").toString())/1000);
-            }
             _map.put("rows", query);
             _map.put("total", zkCfgManager.count());
             return _map;
@@ -51,15 +49,13 @@ public class ZkCfgController {
         try {
             if (des == null || des.equals("")) des = "zookeeper";
             if (sessiontimeout == null || sessiontimeout.equals("")) {
-                sessiontimeout = "3600000";
-            } else {
-                sessiontimeout = sessiontimeout + 000;
+                sessiontimeout = "3600";
             }
             Integer.parseInt(sessiontimeout);
             if (!Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+):(\\d+)").matcher(connectstr).find()) return "添加失败";
             String id = UUID.randomUUID().toString().replaceAll("-", "");
             if (zkCfgManager.add(id, des, connectstr, sessiontimeout))
-                ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
+                ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout) * 1000));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -72,7 +68,7 @@ public class ZkCfgController {
     @ResponseBody
     public Map<String, Object> queryZkCfg(@RequestParam(required = false) String id) {
         try {
-            return zkCfgManager.findById(id);
+            return zkCfgManager.findById(id).entrySet().stream().collect(Collectors.toMap(x->x.getKey().toLowerCase(), x->x.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -88,14 +84,12 @@ public class ZkCfgController {
         try {
             if (des == null || des.equals("")) des = "zookeeper";
             if (sessiontimeout == null || sessiontimeout.equals("")) {
-                sessiontimeout = "3600000";
-            } else {
-                sessiontimeout = sessiontimeout + 000;
+                sessiontimeout = "3600";
             }
             Integer.parseInt(sessiontimeout);
             if (!Pattern.compile("(\\d+\\.\\d+\\.\\d+\\.\\d+):(\\d+)").matcher(connectstr).find()) return "保存失败";
             if (zkCfgManager.update(id, des, connectstr, sessiontimeout))
-                ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
+                ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout) * 1000));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
