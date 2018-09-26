@@ -6,5 +6,5 @@
  
  启动方式：
  下载app下的zooweb-2.0.jar
- 然后java -jar zooweb-1.0.jar 启动
+ 然后java -jar zooweb-2.0.jar 启动
  通过页面 http://127.0.0.1:9345 访问
