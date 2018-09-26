@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 @Controller
 @RequestMapping("/zkcfg")
 public class ZkCfgController {
-    private static final Logger log = LoggerFactory.getLogger(ZkCfgController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZkCfgController.class);
     @Resource
     private ZkCfgManager zkCfgManager;
 
@@ -27,18 +27,17 @@ public class ZkCfgController {
     public Map<String, Object> queryZkCfg(@RequestParam(required = false) int page,
                                           @RequestParam(required = false) int rows) {
         try {
-            log.info(new Date() + "");
+            logger.info(new Date() + "");
             Map<String, Object> _map = new HashMap<String, Object>();
             List<Map<String, Object>> query = zkCfgManager.query(page, rows);
-            for(Map<String, Object> q:query){
-                q.put("SESSIONTIMEOUT",Integer.parseInt(q.get("SESSIONTIMEOUT").toString())/1000);
+            for (Map<String, Object> q : query) {
+                q.put("SESSIONTIMEOUT", Integer.parseInt(q.get("SESSIONTIMEOUT").toString()) / 1000);
             }
             _map.put("rows", query);
             _map.put("total", zkCfgManager.count());
             return _map;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            logger.error("", e);
         }
         return null;
     }
@@ -60,8 +59,7 @@ public class ZkCfgController {
             if (zkCfgManager.add(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            logger.error("", e);
             return "添加失败";
         }
         return "添加成功";
@@ -73,8 +71,7 @@ public class ZkCfgController {
         try {
             return zkCfgManager.findById(id);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            logger.error("", e);
         }
         return null;
     }
@@ -95,8 +92,7 @@ public class ZkCfgController {
             if (zkCfgManager.update(id, des, connectstr, sessiontimeout))
                 ZkCache.put(id, ZkManagerImpl.createZk().connect(connectstr, Integer.parseInt(sessiontimeout)));
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            logger.error("", e);
             return "保存失败";
         }
         return "保存成功";
@@ -108,8 +104,7 @@ public class ZkCfgController {
         try {
             if (zkCfgManager.delete(id)) ZkCache.remove(id);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            logger.error("", e);
             return "删除失败";
         }
         return "删除成功";

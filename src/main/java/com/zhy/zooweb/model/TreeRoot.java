@@ -14,5 +14,4 @@ public class TreeRoot extends ArrayList<Tree>{
 		Tree root = new Tree(0, "/", Tree.STATE_CLOSED, null, atr);
 		this.add(root);
 	}
-
 }

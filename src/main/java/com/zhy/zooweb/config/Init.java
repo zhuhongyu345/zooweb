@@ -22,16 +22,18 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (InterruptedException ignored) {
                 }
                 System.out.println("******************************************************************");
                 System.out.println("******************************************************************");
+                System.out.println("******************************************************************");
                 System.out.println("应用地址：127.0.0.1:9345");
                 System.out.println("应用地址：127.0.0.1:9345");
                 System.out.println("应用地址：127.0.0.1:9345");
                 System.out.println("******************************************************************");
                 System.out.println("******************************************************************");
+                System.out.println("************************* made by zhuhongyu345 in 58ganji ********");
             }
         }).start();
     }
