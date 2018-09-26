@@ -182,10 +182,13 @@ function updateCfg() {
 }
 
 function openUpdateWin() {
-
     var _cfg = $('#zkweb_zkcfg').datagrid('getSelected');
     if (_cfg) {
         $('#zkweb_up_cfg').window('open');
+        $('#up_id').val(_cfg.ID);
+        $('#up_des').val(_cfg.DES);
+        $('#up_connectstr').val(_cfg.CONNECTSTR);
+        $('#up_sessiontimeout').val(_cfg.SESSIONTIMEOUT);
 
         $('#zkweb_up_cfg_form').form("load", "zkcfg/queryZkCfgById?id=" + _cfg.ID);
     } else {
@@ -208,8 +211,6 @@ function openDelWin() {
                 $('#zkweb_zkcfg').datagrid("reload");
                 initTree();
                 $('#zkTab').tabs('close', 0);
-                //$('#zkweb_up_cfg').window('open');
-                //$('#zkweb_up_cfg_form').form("load","zkcfg/queryZkCfgById?id="+_cfg.ID);
             }
         });
         //$('#zkweb_zkcfg').datagrid('selectRow',0);

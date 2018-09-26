@@ -4,7 +4,7 @@
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="js/easyui/locale/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="js/init.js"></script>
+<script type="text/javascript" src="js/init.js?v=21"></script>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>This is ZkWeb</title>
@@ -40,11 +40,6 @@
 
 </div>
 
-<!--
-<div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region</div>
-
-<div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
--->
 <div data-options="region:'west',split:true,title:'zookeeper tree'" style="width:150px;padding:10px;height:120px;">
     <ul id="zkTree" class="easyui-tree">
     </ul>
@@ -129,19 +124,19 @@
      style="width:260px;height:180px;padding:10px;">
 
     <form id="zkweb_up_cfg_form" method="post" action="zkcfg/updateZkCfg">
-        <input type="hidden" name="id"/>
+        <input type="hidden" name="id" id="up_id"/>
         <table>
             <tr>
                 <td style="font-size:12px;">DES:</td>
-                <td><input name="des" type="text"></input></td>
+                <td><input name="des" type="text" id="up_des"></input></td>
             </tr>
             <tr>
                 <td style="font-size:12px;">URL:</td>
-                <td><input name="connectstr" type="text"></input></td>
+                <td><input name="connectstr" type="text" id="up_connectstr"></input></td>
             </tr>
             <tr>
                 <td style="font-size:12px;">SESSION(s):</td>
-                <td><input name="sessiontimeout" type="text" placeholder="3600"></input></td>
+                <td><input name="sessiontimeout" type="text" placeholder="3600" id="up_sessiontimeout"></input></td>
             </tr>
         </table>
         <div style="margin-top: 10px;margin-left: 30px;">
