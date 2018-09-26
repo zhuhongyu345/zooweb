@@ -1,7 +1,5 @@
 package com.zhy.zooweb.dao.zookeeper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -10,6 +8,8 @@ import org.apache.zookeeper.ZooDefs.Perms;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,7 +20,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
 
     private ZooKeeper zk;
     private final String ROOT = "/";
-    private static final Log log = LogFactory.getLog(ZkManagerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZkManagerImpl.class);
 
     public static ZkManagerImpl createZk() {
 
@@ -31,7 +31,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
         try {
             if (null == zk) zk = new ZooKeeper(host, timeout, this);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return this;
     }
@@ -41,7 +41,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
         try {
             return zk.getChildren(path == null ? ROOT : path, false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return new ArrayList<String>();
     }
@@ -54,11 +54,11 @@ public class ZkManagerImpl implements Watcher, ZkManager {
                 if (null == b) {
                     return "";
                 }
-                log.info("data : " + new String(zk.getData(path, false, s)));
+                logger.info("data : " + new String(zk.getData(path, false, s)));
                 return new String(zk.getData(path, false, s));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return null;
     }
@@ -95,8 +95,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
                         String.valueOf(s.getVersion()));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            logger.error("", e);
         }
         return nodeMeta;
     }
@@ -153,8 +152,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            logger.error("", e);
         }
         return returnACLs;
     }
@@ -174,8 +172,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            logger.error("", e);
         }
         return false;
     }
@@ -193,8 +190,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            logger.error("", e);
         }
         return false;
     }
@@ -204,8 +200,7 @@ public class ZkManagerImpl implements Watcher, ZkManager {
             zk.setData(nodePath, data.getBytes("utf-8"), -1);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            logger.error("", e);
         }
         return false;
     }
