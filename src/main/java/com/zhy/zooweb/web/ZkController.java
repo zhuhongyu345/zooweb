@@ -19,7 +19,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/zk")
 public class ZkController {
-    private static final Logger log = LoggerFactory.getLogger(ZkController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZkController.class);
+
     @RequestMapping(value = "/queryZnodeInfo")
     @ResponseBody
     public Map<String, Object> queryzNodeInfo(@RequestParam(required = false) String path,
@@ -27,7 +28,7 @@ public class ZkController {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             path = URLDecoder.decode(path, "utf-8");
-            log.info("queryzNodeInfo : " + path);
+            logger.info("queryzNodeInfo : " + path);
             if (path != null) {
                 model.put("data", ZkCache.get(cacheId).getData(path));
                 model.put("arr", ZkCache.get(cacheId).getNodeMeta(path));
@@ -36,7 +37,7 @@ public class ZkController {
                 model.put("cacheId", cacheId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return model;
     }
@@ -46,34 +47,35 @@ public class ZkController {
     @ResponseBody
     public List<Tree> query(@RequestParam(required = false) String id, @RequestParam(required = false) String path,
                             @RequestParam() String cacheId) {
-        log.info("id : {} | path : {} | cacheId : {}", id,path);
-        log.info("path : {}", path);
-        log.info("cacheId : {}", cacheId);
+        logger.info("id : {} | path : {} | cacheId : {}", id, path);
+        logger.info("path : {}", path);
+        logger.info("cacheId : {}", cacheId);
         TreeRoot root = new TreeRoot();
-        if (path == null) {
-        } else if ("/".equals(path)) {
-            root.remove(0);
-            List<String> pathList = ZkCache.get(cacheId).getChildren(null);
-            log.info("list {}", pathList);
-            for (String p : pathList) {
-                Map<String, Object> atr = new HashMap<String, Object>();
-                atr.put("path", "/" + p);
-                Tree tree = new Tree(0, p, Tree.STATE_CLOSED, null, atr);
-                root.add(tree);
-            }
-        } else {
-            root.remove(0);
-            try {
-                path = URLDecoder.decode(path, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            List<String> pathList = ZkCache.get(cacheId).getChildren(path);
-            for (String p : pathList) {
-                Map<String, Object> atr = new HashMap<String, Object>();
-                atr.put("path", path + "/" + p);
-                Tree tree = new Tree(0, p, Tree.STATE_CLOSED, null, atr);
-                root.add(tree);
+        if (path != null) {
+            if ("/".equals(path)) {
+                root.remove(0);
+                List<String> pathList = ZkCache.get(cacheId).getChildren(null);
+                logger.info("list {}", pathList);
+                for (String p : pathList) {
+                    Map<String, Object> atr = new HashMap<String, Object>();
+                    atr.put("path", "/" + p);
+                    Tree tree = new Tree(0, p, Tree.STATE_CLOSED, null, atr);
+                    root.add(tree);
+                }
+            } else {
+                root.remove(0);
+                try {
+                    path = URLDecoder.decode(path, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    logger.error("", e);
+                }
+                List<String> pathList = ZkCache.get(cacheId).getChildren(path);
+                for (String p : pathList) {
+                    Map<String, Object> atr = new HashMap<String, Object>();
+                    atr.put("path", path + "/" + p);
+                    Tree tree = new Tree(0, p, Tree.STATE_CLOSED, null, atr);
+                    root.add(tree);
+                }
             }
         }
         return root;
@@ -83,11 +85,10 @@ public class ZkController {
     @ResponseBody
     public String saveData(@RequestParam() String path, @RequestParam() String data, @RequestParam() String cacheId) {
         try {
-            log.info("data:{}", data);
+            logger.info("data:{}", data);
             return ZkCache.get(cacheId).setData(path, data) ? "保存成功" : "保存失败";
         } catch (Exception e) {
-            log.info("Error : {}", e.getMessage());
-            e.printStackTrace();
+            logger.info("Error : {}", e.getMessage(), e);
             return "保存失败! Error : " + e.getMessage();
         }
 
@@ -98,12 +99,11 @@ public class ZkController {
     public String createNode(@RequestParam() String path, @RequestParam() String nodeName,
                              @RequestParam() String cacheId) {
         try {
-            log.info("path:{}", path);
-            log.info("nodeName:{}", nodeName);
+            logger.info("path:{}", path);
+            logger.info("nodeName:{}", nodeName);
             return ZkCache.get(cacheId).createNode(path, nodeName, "") ? "保存成功" : "保存失败";
         } catch (Exception e) {
-            log.info("Error : {}", e.getMessage());
-            e.printStackTrace();
+            logger.info("Error : {}", e.getMessage(), e);
             return "保存失败! Error : " + e.getMessage();
         }
 
@@ -113,14 +113,11 @@ public class ZkController {
     @ResponseBody
     public String deleteNode(@RequestParam() String path, @RequestParam() String cacheId) {
         try {
-            log.info("path:{}", path);
+            logger.info("path:{}", path);
             return ZkCache.get(cacheId).deleteNode(path) ? "删除成功" : "删除失败";
         } catch (Exception e) {
-            log.info("Error : {}", e.getMessage());
-            e.printStackTrace();
+            logger.info("Error : {}", e.getMessage(), e);
             return "删除失败! Error : " + e.getMessage();
         }
-
     }
-
 }
