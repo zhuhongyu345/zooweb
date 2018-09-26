@@ -33,7 +33,7 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
                 System.out.println("应用地址：127.0.0.1:9345");
                 System.out.println("******************************************************************");
                 System.out.println("******************************************************************");
-                System.out.println("************************* made by zhuhongyu345 in 58ganji ********");
+                System.out.println("************************* made by zhuhongyu345 in imxiaomai ******");
             }
         }).start();
     }
