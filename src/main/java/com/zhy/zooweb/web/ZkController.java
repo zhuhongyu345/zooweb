@@ -47,7 +47,7 @@ public class ZkController {
     @ResponseBody
     public List<Tree> query(@RequestParam(required = false) String id, @RequestParam(required = false) String path,
                             @RequestParam() String cacheId) {
-        logger.info("id : {} | path : {} | cacheId : {}", id, path);
+        logger.info("id : {} | path : {} ", id, path);
         logger.info("path : {}", path);
         logger.info("cacheId : {}", cacheId);
         TreeRoot root = new TreeRoot();
