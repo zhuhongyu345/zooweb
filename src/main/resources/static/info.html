@@ -73,15 +73,17 @@ body {
 </script>
 </head>
 <body>
-    <form id="ff" action="zk/saveData" method="post">
-    <input id = "r_path" type="hidden" value="${path}" name="path" />
-    <input id = "r_cacheId" type="hidden" value="${cacheId}" name="cacheId" />
+    <form id="ff" action="zk/saveData" method="post" style="overflow:auto">
+    <input id = "r_path" type="" value="${path}" name="path" />
+    <input id = "r_cacheId" type="" value="${cacheId}" name="cacheId" />
 	<div>
 		<table id = "r_table">
 			<tr>
 				<td><label >data：</label></td>
 				<td>
 				<textarea id = "r_data" rows="5" cols="40" name="data"></textarea>
+				</td>
+				<td><a href="#" class="easyui-linkbutton" style="margin-left: 20px;" data-options="iconCls:'icon-save'" onclick="javascript:$('#ff').submit();">保存</a></td>
 			</tr>
 			<tr>
 				<td><label >czxid：</label></td>
@@ -130,7 +132,7 @@ body {
 		</table>
 	</div>
 	<br/>
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="javascript:$('#ff').submit();">保存</a>
+
 	</form>
 </body>
 </html>
