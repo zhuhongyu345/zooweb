@@ -27,9 +27,9 @@ body {
 		});
 	});
 	function initq() {
+
         $.post("zk/queryZnodeInfo", { "path": getQueryString("path"), "cacheId": getQueryString("cacheId")},
             function(data){
-                console.log(data);
                 $("#r_path").val(data.path);
                 $("#r_cacheId").val(data.cacheId);
                 $("#r_data").val(data.data);
@@ -65,6 +65,7 @@ body {
             }
         );
     }
+
     function getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
@@ -73,19 +74,21 @@ body {
 </script>
 </head>
 <body>
-    <form id="ff" action="zk/saveData" method="post" style="overflow:auto">
+    <form id="ff" method="post" style="overflow:auto">
     <input id = "r_path" type="hidden" value="${path}" name="path" />
     <input id = "r_cacheId" type="hidden" value="${cacheId}" name="cacheId" />
 	<div>
 		<table id = "r_table">
 			<tr>
 				<td><label >data：</label></td>
-				<td>
-				<textarea id = "r_data" rows="5" cols="40" name="data"></textarea>
-				</td>
-				<td><a href="#" class="easyui-linkbutton" style="margin-left: 20px;" data-options="iconCls:'icon-save'" onclick="javascript:$('#ff').submit();">保存</a></td>
-			</tr>
-			<tr>
+                <td>
+                    <textarea id="r_data" rows="5" cols="40" name="data"></textarea>
+                </td>
+                <td><a href="#" id="saveData" class="easyui-linkbutton" style="margin-left: 20px;"
+                       data-options="iconCls:'icon-save'"
+                       onclick="submitF()">保存</a></td>
+            </tr>
+            <tr>
 				<td><label >czxid：</label></td>
 				<td id ="r_czxid"></td>
 			</tr>

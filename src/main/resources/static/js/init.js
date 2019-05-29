@@ -12,6 +12,26 @@ function initDataGrid() {
 }
 
 /****************************************************************************************************************************/
+
+function submitF() {
+    var param = {};
+    param.cacheId = $("#r_cacheId").val();
+    param.path = $("#r_path").val();
+    param.data = $("#r_data").val().trim();
+
+    $.ajax({
+        type: "post",
+        data: param,
+        url: "zk/saveData",
+        success: function (data) {
+            $.messager.alert('提示', data);
+        },
+        error: function () {
+            alert('服务异常！');
+        }
+    });
+}
+
 function initTree(cacheId) {
 
     $('#zkTree').tree({
@@ -223,7 +243,6 @@ function doData(path, cacheId) {
     $.post("zk/queryZnodeInfo", {"path": path, "cacheId": cacheId},
         // $.post("zk/queryZnodeInfo", { "path": getQueryString("path"), "cacheId": getQueryString("cacheId")},
         function (data) {
-            console.log(data);
             $("#r_path").val(data.path);
             $("#r_cacheId").val(data.cacheId);
             $("#r_data").val(data.data);
