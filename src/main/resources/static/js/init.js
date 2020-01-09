@@ -32,6 +32,8 @@ function submitF() {
     });
 }
 
+var curPath = '';
+var curCache = '';
 function initTree(cacheId) {
 
     $('#zkTree').tree({
@@ -65,7 +67,9 @@ function initTree(cacheId) {
                     href: "info.html?path=" + encodeURI(encodeURI(node.attributes.path)) + "&cacheId=" + cacheId
                 });
             }
-            doData(encodeURI(encodeURI(node.attributes.path)), cacheId);
+            curPath = encodeURI(encodeURI(node.attributes.path));
+            curCache = cacheId;
+            // doData(encodeURI(encodeURI(node.attributes.path)), cacheId);
         },
         onBeforeExpand: function (node, param) {
             if (node.attributes != null) {
@@ -240,6 +244,7 @@ function openDelWin() {
 }
 
 function doData(path, cacheId) {
+    $.ajaxSettings.async = false;
     $.post("zk/queryZnodeInfo", {"path": path, "cacheId": cacheId},
         // $.post("zk/queryZnodeInfo", { "path": getQueryString("path"), "cacheId": getQueryString("cacheId")},
         function (data) {
@@ -277,6 +282,8 @@ function doData(path, cacheId) {
             $("#r_table").append(html);
         }
     );
+    $.ajaxSettings.async = true;
+
 }
 
 function getQueryString(name) {
