@@ -1,6 +1,5 @@
 $(function () {
     $(function(){
-        initq();
         $('#ff').form({
             success:function(data){
                 $.messager.alert('提示', data);
