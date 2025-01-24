@@ -5,6 +5,6 @@
  能正常看zonode结构、数据、添加、修改等。
  
  启动方式：
- 下载app下的zooweb-2.0.jar
- 然后java -jar zooweb-2.0.jar 启动
+ 下载zooweb-2.2.jar
+ 然后java -jar zooweb-2.2.jar 启动
  通过页面 http://127.0.0.1:9345 访问
